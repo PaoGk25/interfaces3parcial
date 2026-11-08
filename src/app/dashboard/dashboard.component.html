@@ -1,0 +1,47 @@
+<app-page-title titulo="Panel de control" subtitulo="Resumen del inventario"></app-page-title>
+
+<!-- Aviso emergente (toast de Bootstrap): reemplaza a la antigua tabla de alertas -->
+<div class="toast-container position-fixed top-0 end-0 p-3 mt-5" *ngIf="mostrarAviso && alertas.length > 0">
+  <div class="toast show text-bg-warning" role="alert">
+    <div class="toast-header">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <strong class="me-auto">Aviso de stock</strong>
+      <button type="button" class="btn-close" aria-label="Cerrar" (click)="mostrarAviso = false"></button>
+    </div>
+    <div class="toast-body">
+      <div *ngFor="let p of alertas">{{ p.nombre }}: <b>{{ p | estadoStock }}</b> ({{ p.stock }})</div>
+    </div>
+  </div>
+</div>
+
+<section class="grid-3">
+  <div class="card stat"><span><i class="bi bi-box-seam"></i> Productos</span><b>{{ productos.length }}</b></div>
+  <div class="card stat" *ngIf="auth.esAdmin()"><span><i class="bi bi-cash-coin"></i> Valor del inventario</span><b>{{ valorInventario | currency: 'PEN':'S/ ' }}</b></div>
+</section>
+
+<section class="grid-2">
+  <div class="card">
+    <h2>Stock por producto</h2>
+    <div class="grafico"><canvas #graficoStock></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Entradas y salidas</h2>
+    <div class="grafico"><canvas #graficoMovimientos></canvas></div>
+  </div>
+</section>
+
+<h3>Últimos movimientos</h3>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th>Cantidad</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let m of ultimos">
+        <td>{{ m.fecha | date: 'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ nombreProducto(m.productoId) }}</td>
+        <td>{{ m.tipo | tipoMovimiento }}</td>
+        <td>{{ m.cantidad }}</td>
+      </tr>
+      <tr *ngIf="ultimos.length === 0"><td colspan="4" class="vacio">Aún no hay movimientos registrados.</td></tr>
+    </tbody>
+  </table>
+</div>

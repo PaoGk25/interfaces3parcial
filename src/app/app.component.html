@@ -1,0 +1,18 @@
+<nav class="navbar">
+  <a class="brand" routerLink="/"><i class="bi bi-box-seam"></i> Inventario Escolar</a>
+  <button class="burger" type="button" (click)="menuAbierto = !menuAbierto" aria-label="Abrir menú"><i
+      class="bi bi-list"></i></button>
+  <div class="links" [class.abierto]="menuAbierto" *ngIf="auth.estaAutenticado()" (click)="menuAbierto = false">
+    <a routerLink="/dashboard" routerLinkActive="activo"><i class="bi bi-speedometer2"></i> Panel</a>
+    <a routerLink="/productos" routerLinkActive="activo"><i class="bi bi-box-seam"></i> Productos</a>
+    <a routerLink="/movimientos/registrar" routerLinkActive="activo"><i class="bi bi-arrow-left-right"></i>
+      Movimientos</a>
+    <a routerLink="/movimientos/kardex" routerLinkActive="activo"><i class="bi bi-journal-text"></i> Kardex</a>
+    <button type="button" class="link-salir" (click)="salir()"><i class="bi bi-box-arrow-right"></i> Salir ({{
+      auth.sesionActual()?.nombre }})</button>
+  </div>
+</nav>
+
+<main class="container">
+  <router-outlet></router-outlet>
+</main>

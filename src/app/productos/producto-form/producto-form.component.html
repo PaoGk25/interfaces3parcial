@@ -1,0 +1,49 @@
+<app-page-title [titulo]="esEdicion ? 'Editar producto' : 'Nuevo producto'"></app-page-title>
+
+<form class="card" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+  <div class="form-group">
+    <label for="codigo">Código</label>
+    <input id="codigo" formControlName="codigo" placeholder="Ej. CUA-002" />
+    <small class="error" *ngIf="invalido('codigo')">
+      <ng-container *ngIf="form.controls.codigo.errors?.['required']">El código es obligatorio.</ng-container>
+      <ng-container *ngIf="form.controls.codigo.errors?.['pattern']">Use 3 a 12 letras, números o guiones.</ng-container>
+      <ng-container *ngIf="form.controls.codigo.errors?.['codigoDuplicado']">Ya existe un producto con ese código.</ng-container>
+    </small>
+  </div>
+
+  <div class="form-group">
+    <label for="nombre">Nombre</label>
+    <input id="nombre" formControlName="nombre" />
+    <small class="error" *ngIf="invalido('nombre')">El nombre es obligatorio (3 a 80 caracteres).</small>
+  </div>
+
+  <div class="form-group">
+    <label for="categoria">Categoría</label>
+    <select id="categoria" formControlName="categoria">
+      <option *ngFor="let c of categorias" [value]="c">{{ c }}</option>
+    </select>
+  </div>
+
+  <div class="grid-3">
+    <div class="form-group">
+      <label for="precio">Precio (S/)</label>
+      <input id="precio" type="number" step="0.01" formControlName="precio" />
+      <small class="error" *ngIf="invalido('precio')">Ingrese un precio mayor a 0.</small>
+    </div>
+    <div class="form-group">
+      <label for="stock">Stock inicial</label>
+      <input id="stock" type="number" formControlName="stock" />
+      <small class="error" *ngIf="invalido('stock')">Ingrese un entero mayor o igual a 0.</small>
+    </div>
+    <div class="form-group">
+      <label for="stockMinimo">Stock mínimo</label>
+      <input id="stockMinimo" type="number" formControlName="stockMinimo" />
+      <small class="error" *ngIf="invalido('stockMinimo')">Ingrese un entero mayor o igual a 0.</small>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn" type="submit">{{ esEdicion ? 'Guardar cambios' : 'Registrar producto' }}</button>
+    <a class="btn btn-sec" routerLink="/productos">Cancelar</a>
+  </div>
+</form>

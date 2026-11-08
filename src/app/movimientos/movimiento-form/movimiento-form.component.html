@@ -1,0 +1,44 @@
+<app-page-title titulo="Registrar movimiento" subtitulo="Entradas y salidas de mercadería"></app-page-title>
+
+<form class="card" [formGroup]="form" (ngSubmit)="registrar()" novalidate>
+  <div class="form-group">
+    <label for="productoId">Producto</label>
+    <select id="productoId" formControlName="productoId">
+      <option [ngValue]="0" disabled>-- Seleccione --</option>
+      <option *ngFor="let p of productos" [ngValue]="p.id">{{ p.codigo }} - {{ p.nombre }}</option>
+    </select>
+    <small class="error" *ngIf="invalido('productoId')">Seleccione un producto.</small>
+    <small class="hint" *ngIf="productoSeleccionado as ps">Stock actual: <b>{{ ps.stock }}</b></small>
+  </div>
+
+  <div class="grid-2">
+    <div class="form-group">
+      <label for="tipo">Tipo</label>
+      <select id="tipo" formControlName="tipo">
+        <option *ngFor="let t of tipos" [value]="t">{{ t | tipoMovimiento }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="cantidad">Cantidad</label>
+      <input id="cantidad" type="number" formControlName="cantidad" />
+      <small class="error" *ngIf="invalido('cantidad')">Ingrese un entero mayor a 0.</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="motivo">Motivo</label>
+    <input id="motivo" formControlName="motivo" placeholder="Ej. Compra a proveedor, venta, merma..." />
+    <small class="error" *ngIf="invalido('motivo')">Indique el motivo (mínimo 3 caracteres).</small>
+  </div>
+
+  <p class="error" *ngIf="form.errors?.['stockInsuficiente'] !== undefined">
+    La salida supera el stock disponible ({{ form.errors?.['stockInsuficiente'] }}).
+  </p>
+  <p class="error" *ngIf="errorServicio">{{ errorServicio }}</p>
+  <p class="ok" *ngIf="mensaje">{{ mensaje }}</p>
+
+  <div class="actions">
+    <button class="btn" type="submit">Registrar</button>
+    <a class="btn btn-sec" routerLink="/movimientos/kardex">Ver kardex</a>
+  </div>
+</form>

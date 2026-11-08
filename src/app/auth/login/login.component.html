@@ -1,0 +1,32 @@
+<div class="login-pantalla">
+<div class="card login">
+  <app-page-title id="tituloo" titulo="Iniciar sesión" subtitulo="Sistema de inventario - Útiles escolares"></app-page-title>
+
+  <form [formGroup]="form" (ngSubmit)="ingresar()" novalidate>
+    <div class="form-group">
+      <label for="usuario">Usuario</label>
+      <input id="usuario" type="text" formControlName="usuario" autocomplete="username" />
+      <small class="error" *ngIf="form.controls.usuario.touched && form.controls.usuario.errors?.['required']">
+        El usuario es obligatorio.
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="clave">Contraseña</label>
+      <div class="clave-wrap">
+        <input id="clave" [type]="verClave ? 'text' : 'password'" formControlName="clave" autocomplete="current-password" />
+        <button type="button" class="ojo" (click)="verClave = !verClave" [title]="verClave ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+          <i class="bi" [ngClass]="verClave ? 'bi-eye-slash' : 'bi-eye'"></i>
+        </button>
+      </div>
+      <small class="error" *ngIf="form.controls.clave.touched && form.controls.clave.invalid">
+        La contraseña es obligatoria (mínimo 4 caracteres).
+      </small>
+    </div>
+
+    <p class="error" *ngIf="error">Usuario o contraseña incorrectos.</p>
+    <button class="btn" type="submit">Ingresar</button>
+    
+  </form>
+</div>
+</div>

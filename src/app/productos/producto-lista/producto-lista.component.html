@@ -1,0 +1,50 @@
+<app-page-title titulo="Productos" subtitulo="Catálogo y stock actual"></app-page-title>
+
+<div class="toolbar">
+  <input type="search" placeholder="Buscar por código o nombre..." [(ngModel)]="filtro" aria-label="Buscar producto" />
+  <a class="btn" routerLink="nuevo" *ngIf="auth.esAdmin()"><i class="bi bi-plus-lg"></i> Nuevo producto</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Categoría</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of productosFiltrados" [appStockBajo]="p">
+        <td>{{ p.codigo }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.categoria }}</td>
+        <td>{{ p.precio | currency: 'PEN':'S/ ' }}</td>
+        <td>{{ p.stock }} <small>(mín. {{ p.stockMinimo }})</small></td>
+        <td>
+          <span class="badge" [ngClass]="{
+            'estado-normal': (p | estadoStock) === 'Normal',
+            'estado-bajo': (p | estadoStock) === 'Stock bajo',
+            'estado-agotado': (p | estadoStock) === 'Agotado'
+            }">{{ p | estadoStock }}
+            </span>
+        </td>
+        <td class="acciones">
+          <a [routerLink]="['editar', p.id]" *ngIf="auth.esAdmin()" title="Editar"><i
+              class="bi bi-pencil-square"></i></a>
+          <a [routerLink]="['/movimientos/kardex']" [queryParams]="{ producto: p.id }" title="Ver kardex"><i
+              class="bi bi-journal-text"></i></a>
+          <button type="button" class="link-danger" *ngIf="auth.esAdmin()" (click)="eliminar(p)" title="Eliminar"><i
+              class="bi bi-trash"></i></button>
+        </td>
+      </tr>
+      <tr *ngIf="productosFiltrados.length === 0">
+        <td colspan="7" class="vacio">No hay productos para mostrar.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

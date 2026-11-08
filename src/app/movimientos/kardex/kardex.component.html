@@ -1,0 +1,29 @@
+<app-page-title titulo="Kardex" subtitulo="Historial de movimientos por producto"></app-page-title>
+
+<div class="card">
+  <div class="form-group">
+    <label for="producto">Producto</label>
+    <select id="producto" [formControl]="productoId">
+      <option [ngValue]="0">-- Seleccione --</option>
+      <option *ngFor="let p of productos" [ngValue]="p.id">{{ p.codigo }} - {{ p.nombre }}</option>
+    </select>
+  </div>
+  <p *ngIf="producto as p">Stock actual: <b>{{ p.stock }}</b> &middot; Estado: <span class="badge">{{ p | estadoStock }}</span></p>
+</div>
+
+<div class="table-wrap" *ngIf="producto">
+  <table>
+    <thead><tr><th>Fecha</th><th>Tipo</th><th>Cantidad</th><th>Motivo</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let m of movimientos">
+        <td>{{ m.fecha | date: 'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ m.tipo | tipoMovimiento }}</td>
+        <td [class.entrada]="m.tipo === 'ENTRADA'" [class.salida]="m.tipo === 'SALIDA'">
+          {{ m.tipo === 'ENTRADA' ? '+' : '-' }}{{ m.cantidad }}
+        </td>
+        <td>{{ m.motivo }}</td>
+      </tr>
+      <tr *ngIf="movimientos.length === 0"><td colspan="4" class="vacio">Este producto aún no tiene movimientos.</td></tr>
+    </tbody>
+  </table>
+</div>
